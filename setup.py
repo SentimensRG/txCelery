@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 from setuptools import setup
-
-from txcelery import __version__
+import pkg_resources
 
 setup(
     name='txCelery',
-    version=__version__,
+    version=pkg_resources.require("txcelery")[0].version,
     author='Sentimens Research Group, LLC',
     author_email='contact@sentimens.com',
     packages=['txcelery'],
