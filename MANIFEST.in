@@ -1,0 +1,3 @@
+include txcelery/*.py
+include test/*.py
+include README.md
