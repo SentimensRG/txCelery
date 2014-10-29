@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+from pkg_resources import get_distribution
+
 import defer
 
-__version__ = '0.0.2 alpha'
+__version__ = get_distribution('foobar').version
