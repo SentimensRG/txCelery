@@ -17,6 +17,8 @@ And best of all, txCelery fully leverages Twisted's Deferred API, so there's no 
 
 ## Installation
 
+**Note**:  These instructions assume you have a working installation of [Celery](http://www.celeryproject.org/).
+
 The recommended way of installing txCelery is through `pip`.  PyPI will contain the latest stable version of txCelery.
 
 ### Stable
