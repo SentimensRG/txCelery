@@ -3,4 +3,4 @@ from pkg_resources import get_distribution
 
 import defer
 
-__version__ = get_distribution('foobar').version
+__version__ = get_distribution('txcelery').version
