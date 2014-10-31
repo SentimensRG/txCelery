@@ -6,7 +6,7 @@ MIT License
 
 Module Contents:
     - DeferredTask
-    - TwistedCelery
+    - CeleryClient
 """
 from functools import wraps
 from types import MethodType, FunctionType
@@ -68,22 +68,22 @@ class DeferredTask(defer.Deferred):
             )
 
 
-class TwistedCelery(object):
+class CeleryClient(object):
     """Decorator class that wraps a celery task such that any methods
     returning an Celery `AsyncResult` instance are wrapped in a
     `DeferredTask` instance.
 
-    Instances of `TwistedCelery` expose all methods of the underlying Celery
+    Instances of `CeleryClient` expose all methods of the underlying Celery
     task.
 
     Usage:
 
-        @TwistedCelery
+        @CeleryClient
         @app.task
         def my_task():
             # ...
 
-    Note:  The `@TwistedCelery` decorator must be callsed __after__ the
+    Note:  The `@CeleryClient` decorator must be callsed __after__ the
            `@app.task` decorator, meaning that the former must be __above__
            the latter.
     """
@@ -95,7 +95,7 @@ class TwistedCelery(object):
 
     def __repr__(self):
         s = self._fn.__repr__().strip('<>')
-        return '<TwistedCelery{s}>'.format(s=s)
+        return '<CeleryClient{s}>'.format(s=s)
 
     def __call__(self, *args, **kw):
         return self._fn(*args, **kw)
@@ -116,4 +116,4 @@ class TwistedCelery(object):
             return res
         return wrapper
 
-__all__ = [TwistedCelery, DeferredTask]
+__all__ = [CeleryClient, DeferredTask]
