@@ -17,7 +17,7 @@ from celery.local import PromiseProxy
 from celery.result import AsyncResult
 
 
-class DeferredTask(defer.Deferred):
+class DeferredTask(defer.Deferred, object):
     """Subclass of `twisted.defer.Deferred` that wraps a
     `celery.local.PromiseProxy` (i.e. a "Celery task"), exposing the combined
     functionality of both classes.
