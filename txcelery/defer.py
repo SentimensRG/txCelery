@@ -95,7 +95,7 @@ class CeleryClient(object):
 
     def __repr__(self):
         s = self._fn.__repr__().strip('<>')
-        return '<CeleryClient{s}>'.format(s=s)
+        return '<CeleryClient {s}>'.format(s=s)
 
     def __call__(self, *args, **kw):
         return self._fn(*args, **kw)
