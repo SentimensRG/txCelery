@@ -8,7 +8,7 @@ setup(
     author_email='contact@sentimens.com',
     packages=['txcelery'],
     include_package_data=True,
-    install_requires=['Twisted>=11.0.0', 'Celery>=3.0.0'],
+    install_requires=['Twisted>=11.0.0', 'Celery>=3.0.0', 'setuptools>=0.6'],
     url='https://github.com/SentimensRG/txCelery',
     license='MIT',
     description=('Celery for Twisted:  manage Celery tasks from twisted'
