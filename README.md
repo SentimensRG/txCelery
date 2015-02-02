@@ -9,7 +9,7 @@ Celery for Twisted:  manage Celery tasks from twisted using the Deferred API
 
 Celery is an outstanding choice for dispatching *short-lived*, computationally-expensive tasks to a distributed backend system.  Note the emphasis; Celery is ill-suited for tasks tasks that require updating some in-memory representation with out-of-process data.  If you want a specific process to read data from standard input, for instance, good luck...
 
-Twisted can be though of as having the opposite problem.  Twisted is very good at maintaining and updating in-memory representations over extended periods of time, but fails miserably at performing expensive computations.  Twisted notably has no built-in constructs for managing task distributed task queues.
+Twisted can be though of as having the opposite problem.  Twisted is very good at maintaining and updating in-memory representations over extended periods of time, but fails miserably at performing expensive computations.  Twisted notably has no built-in constructs for managing distributed task queues.
 
 As its name suggests, txCelery elegantly couples these two frameworks together, and in so doing allows them to compliment each other.  Developers can now create long-running processes whose expensive subroutines can be farmed out to a distributed computational cluster.
 
