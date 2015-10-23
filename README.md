@@ -5,6 +5,10 @@ Celery for Twisted:  manage Celery tasks from twisted using the Deferred API
 
 [![PyPI version](https://badge.fury.io/py/txCelery.svg)](http://badge.fury.io/py/txCelery)
 
+##Deprecation Notice
+
+txCelery is no longer being developed.  Open an issue if you would like to maintain the project.
+
 ## Motivation
 
 Celery is an outstanding choice for dispatching *short-lived*, computationally-expensive tasks to a distributed backend system.  Note the emphasis; Celery is ill-suited for tasks tasks that require updating some in-memory representation with out-of-process data.  If you want a specific process to read data from standard input, for instance, good luck...
