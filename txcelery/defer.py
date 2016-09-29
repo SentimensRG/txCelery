@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """txcelery
 Copyright Sentimens Research Group, LLC
 2014
@@ -9,9 +8,12 @@ Module Contents:
     - CeleryClient
 """
 from functools import wraps
+
+from twisted.internet.task import deferLater
+from twisted.python.failure import Failure
 from types import MethodType, FunctionType
 
-from twisted.internet import defer
+from twisted.internet import defer, reactor
 from celery import states
 from celery.local import PromiseProxy
 from celery.result import AsyncResult
@@ -25,6 +27,7 @@ class DeferredTask(defer.Deferred, object):
     `DeferredTask` instances can be treated both like ordinary Deferreds and
     oridnary PromiseProxies.
     """
+
     def __init__(self, async_result, canceller=None):
         """Instantiate a `DeferredTask`.  See `help(DeferredTask)` for details
         pertaining to functionality.
@@ -40,32 +43,32 @@ class DeferredTask(defer.Deferred, object):
         defer.Deferred.__init__(self, canceller=canceller or self._canceller)
 
         self.task = async_result
-        self._d = self._monitor_task(async_result)
-        self._d.addCallbacks(self.callback, errback=self.errback)
+        self._monitor_task()
 
-    @staticmethod  # Canceller is explicitly passed Deferred to be cancelled
     def _canceller(self):
+        # from celery.task.control import revoke
+        # revoke(task_id, terminate=True)
         self._d.cancel()
 
-    @staticmethod
-    @defer.inlineCallbacks
-    def _monitor_task(async_result):
+    def _monitor_task(self):
         """Wrapper that handles the actual asynchronous monitoring of the task
         state.
         """
-        while async_result.state in states.UNREADY_STATES:
-            yield
+        if self.task.state in states.UNREADY_STATES:
+            reactor.callLater(0, self._monitor_task)
+            return
 
-        if async_result.state == 'SUCCESS':
-            defer.returnValue(async_result.result)
-        elif async_result.state == 'FAILURE':
-            async_result.maybe_reraise()
-        elif async_result.state == 'REVOKED':
-            raise defer.CancelledError('Task {0}'.format(async_result.id))
+        if self.task.state == 'SUCCESS':
+            self.callback(self.task.result)
+        elif self.task.state == 'FAILURE':
+            self.errback(Failure(self.task.result))
+        elif self.task.state == 'REVOKED':
+            self.errback(
+                Failure(defer.CancelledError('Task {0}'.format(self.task.id))))
         else:
-            raise ValueError(
-                'Cannot respond to `{}` state'.format(async_result.state)
-            )
+            self.errback(ValueError(
+                'Cannot respond to `{}` state'.format(self.task.state)
+            ))
 
 
 class CeleryClient(object):
@@ -87,6 +90,7 @@ class CeleryClient(object):
            `@app.task` decorator, meaning that the former must be __above__
            the latter.
     """
+
     def __init__(self, fn):
         if not isinstance(fn, PromiseProxy):
             raise TypeError('Wrapped function must be a Celery task.')
@@ -114,6 +118,8 @@ class CeleryClient(object):
             if isinstance(res, AsyncResult):
                 return DeferredTask(res)
             return res
+
         return wrapper
+
 
 __all__ = [CeleryClient, DeferredTask]
