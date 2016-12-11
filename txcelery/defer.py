@@ -8,15 +8,14 @@ Module Contents:
     - CeleryClient
 """
 from functools import wraps
-
-from twisted.internet.task import deferLater
-from twisted.python.failure import Failure
 from types import MethodType, FunctionType
 
-from twisted.internet import defer, reactor
 from celery import states
 from celery.local import PromiseProxy
 from celery.result import AsyncResult
+from celery.worker.control import revoke
+from twisted.internet import defer, reactor
+from twisted.python.failure import Failure
 
 
 class DeferredTask(defer.Deferred, object):
@@ -28,34 +27,30 @@ class DeferredTask(defer.Deferred, object):
     oridnary PromiseProxies.
     """
 
-    def __init__(self, async_result, canceller=None):
+    def __init__(self, async_result):
         """Instantiate a `DeferredTask`.  See `help(DeferredTask)` for details
         pertaining to functionality.
 
-        async_result : celery.result.AsyncResult
+        :param async_result : celery.result.AsyncResult
             AsyncResult to be monitored.  When completed or failed, the
             DeferredTask will callback or errback, respectively.
-
-        canceller : None or callable
-            See `help(twisted.internet.defer.Deferred)`
         """
         # Deferred is an old-style class
-        defer.Deferred.__init__(self, canceller=canceller or self._canceller)
+        defer.Deferred.__init__(self, DeferredTask._canceller)
 
         self.task = async_result
         self._monitor_task()
 
     def _canceller(self):
-        # from celery.task.control import revoke
-        # revoke(task_id, terminate=True)
-        self._d.cancel()
+        revoke(self.task.id, terminate=True)
 
     def _monitor_task(self):
         """Wrapper that handles the actual asynchronous monitoring of the task
         state.
+
         """
         if self.task.state in states.UNREADY_STATES:
-            reactor.callLater(0, self._monitor_task)
+            reactor.callLater(1, self._monitor_task)
             return
 
         if self.task.state == 'SUCCESS':
@@ -71,22 +66,22 @@ class DeferredTask(defer.Deferred, object):
             ))
 
 
-class CeleryClient(object):
+class DeferrableTask(object):
     """Decorator class that wraps a celery task such that any methods
     returning an Celery `AsyncResult` instance are wrapped in a
     `DeferredTask` instance.
 
-    Instances of `CeleryClient` expose all methods of the underlying Celery
+    Instances of `DeferrableTask` expose all methods of the underlying Celery
     task.
 
     Usage:
 
-        @CeleryClient
+        @DeferrableTask
         @app.task
         def my_task():
             # ...
 
-    Note:  The `@CeleryClient` decorator must be callsed __after__ the
+    :Note:  The `@DeferrableTask` decorator must be callsed __after__ the
            `@app.task` decorator, meaning that the former must be __above__
            the latter.
     """
@@ -122,4 +117,8 @@ class CeleryClient(object):
         return wrapper
 
 
-__all__ = [CeleryClient, DeferredTask]
+# Backwards compatibility
+class CeleryClient(DeferrableTask):
+    pass
+
+__all__ = [CeleryClient, DeferredTask, DeferrableTask]
