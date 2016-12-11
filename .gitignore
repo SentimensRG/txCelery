@@ -55,3 +55,4 @@ target/
 
 # Git
 *.orig
+.idea
