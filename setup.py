@@ -2,14 +2,14 @@
 from setuptools import setup
 
 setup(
-    name='txCelery',
-    version='1.0.2',
+    name='txCelery-syn',
+    version='1.1.0',
     author='Sentimens Research Group, LLC',
     author_email='contact@sentimens.com',
     packages=['txcelery'],
     include_package_data=True,
     install_requires=['Twisted>=11.0.0', 'Celery>=3.0.0', 'setuptools>=0.6'],
-    url='https://github.com/SentimensRG/txCelery',
+    url='https://github.com/Synerty/txCelery',
     license='MIT',
     description=('Celery for Twisted:  manage Celery tasks from twisted'
                  'using the Deferred API'),
