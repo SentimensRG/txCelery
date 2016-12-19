@@ -20,7 +20,8 @@ setup(
     description=('Celery for Twisted:  manage Celery tasks from twisted'
                  'using the Deferred API'),
     keywords=["celery", "twisted", "deferred", "async", "asynchronous"],
-    long_description=open('README.md').read(),
+    long_description="""Celery for Twisted:
+    Manage Celery tasks from twisted using the Deferred API""",
     classifiers=[
         "Programming Language :: Python :: 3.5",
     ],
