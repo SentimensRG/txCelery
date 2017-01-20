@@ -3,4 +3,4 @@ from pkg_resources import require
 
 from . import defer
 
-__version__ = '1.1.2'
+__version__ = '1.1.3'
