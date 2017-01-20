@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 from setuptools import setup
 
-import txcelery
+
+package_name = 'txcelery-py3'
+package_version = '1.1.2'
 
 setup(
     name='txcelery-py3',
-    version=txcelery.__version__,
+    provides='txcelery',
+    version=package_version,
     author='Sentimens Research Group, LLC',
     author_email='contact@sentimens.com',
     maintainer="Synerty Pty Ltd",
@@ -15,7 +18,7 @@ setup(
     install_requires=['Twisted>=11.0.0', 'Celery>=3.0.0', 'setuptools>=0.6'],
     url='https://github.com/Synerty/txcelery-py3',
     download_url=('https://github.com/Synerty/txcelery-py3/tarball/%s'
-                  % txcelery.__version__),
+                  % package_version),
     license='MIT',
     description=('Celery for Twisted:  manage Celery tasks from twisted'
                  'using the Deferred API'),

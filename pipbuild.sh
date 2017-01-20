@@ -25,6 +25,9 @@ fi
 
 echo "Setting version to $VER"
 
+# Update the setup.py
+sed -i "s;^package_version.*=.*;package_version = '${VER}';"  setup.py
+
 # Update the package version
 sed -i "s;.*version.*;__version__ = '${VER}';" txcelery/__init__.py
 
