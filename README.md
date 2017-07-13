@@ -38,7 +38,7 @@ The latest development files can be obtained by cloning the github repo, checkin
 
 txCelery's API is so simple it brings tears to our eyes.  There are exactly one and a half constructs.  Yes, one and *one half*.
 
-###The "one" construct:  wrapping a Celery task
+### The "one" construct:  wrapping a Celery task
 
 In order to use a Celery task with Twisted, you must wrap your Celery task with a `DeferrableTask`-class decorator.  In your `tasks.py` (or wherever you keep your Celery tasks):
 
