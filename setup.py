@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='txCelery',
-    version='1.0.2',
+    version='1.1.0',
     author='Sentimens Research Group, LLC',
     author_email='contact@sentimens.com',
     packages=['txcelery'],
