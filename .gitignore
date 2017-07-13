@@ -19,6 +19,7 @@ parts/
 sdist/
 var/
 *.egg-info/
+MANIFEST
 .installed.cfg
 *.egg
 
@@ -55,3 +56,4 @@ target/
 
 # Git
 *.orig
+.idea
