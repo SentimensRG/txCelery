@@ -1,13 +1,15 @@
-txCelery
+txCelery-py3
 =============
 
 Celery for Twisted:  manage Celery tasks from twisted using the Deferred API
 
 [![PyPI version](https://badge.fury.io/py/txcelery-py3.svg)](http://badge.fury.io/py/txcelery-py3)
 
-##Deprecation Notice
+##Fork Notice
 
-txCelery is no longer being developed.  Open an issue if you would like to maintain the project.
+txcelery-py3 is a fork from txCelery.
+
+txCelery (https://github.com/SentimensRG/txCelery) is no longer being developed.
 
 ## Motivation
 
@@ -44,24 +46,24 @@ txCelery's API is so simple it brings tears to our eyes.  There are exactly one 
 
 ###The "one" construct:  wrapping a Celery task
 
-In order to use a Celery task with Twisted, you must wrap your Celery task with a `CeleryClient`-class decorator.  In your `tasks.py` (or wherever you keep your Celery tasks):
+In order to use a Celery task with Twisted, you must wrap your Celery task with a `DeferrableTask`-class decorator.  In your `tasks.py` (or wherever you keep your Celery tasks):
 
 ```python
 from celery import Celery
-from txcelery.defer import CeleryClient
+from txcelery.defer import DeferrableTask
 
 app = Celery('tasks', backend='amqp', broker='amqp://guest@localhost//')
 
 
-@CeleryClient
+@DeferrableTask
 @app.task
 def my_task(*args, **kw):
 	# do something
 ```
 
-There's just one thing to bear in mind:  contrary to the Celery documentation's insistance that `@app.task` be the top-most decorator in your function definition, `CeleryClient` expects to wrap a celery task and will throw a `TypeError` if it receives anything else.
+There's just one thing to bear in mind:  contrary to the Celery documentation's insistance that `@app.task` be the top-most decorator in your function definition, `DeferrableTask` expects to wrap a celery task and will throw a `TypeError` if it receives anything else.
 
-Once you've wrapped your task with the `CeleryClient`-class decorator, you'll find all the usual task methods like `delay`, `apply_async`, `subtask`, `chain`, etc.  The difference is that those which used to return a `celery.result.AsyncResult` will now return a `twisted.internet.defer.Deferred` instance when they are called (ok, actually a subclass of `Deferred`, but more on that in a second).
+Once you've wrapped your task with the `DeferrableTask`-class decorator, you'll find all the usual task methods like `delay`, `apply_async`, `subtask`, `chain`, etc.  The difference is that those which used to return a `celery.result.AsyncResult` will now return a `twisted.internet.defer.Deferred` instance when they are called (ok, actually a subclass of `Deferred`, but more on that in a second).
 
 ###The "one half":  a (Deferred) rose by any other name...
 
@@ -73,7 +75,7 @@ Our subclass is called `DeferredTask`, it lives in `txcelery.defer` and as far a
 
 ###In summary
 
-1.  Wrap a task with a `CeleryClient`
+1.  Wrap a task with a `DeferrableTask`
 2.  Call task methods and obtain a `DeferredTask` instance in lieu of an `AsyncResult`
 3.  Use `DeferredTask` as if it were a regular `Deferred` or a regular `AsyncResult`
 
