@@ -1,15 +1,9 @@
-txCelery-py3
+txCelery
 =============
 
 Celery for Twisted:  manage Celery tasks from twisted using the Deferred API
 
 [![PyPI version](https://badge.fury.io/py/txcelery-py3.svg)](http://badge.fury.io/py/txcelery-py3)
-
-##Fork Notice
-
-txcelery-py3 is a fork from txCelery.
-
-txCelery (https://github.com/SentimensRG/txCelery) is no longer being developed.
 
 ## Motivation
 
