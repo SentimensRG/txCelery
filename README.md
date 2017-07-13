@@ -65,7 +65,7 @@ There's just one thing to bear in mind:  contrary to the Celery documentation's 
 
 Once you've wrapped your task with the `DeferrableTask`-class decorator, you'll find all the usual task methods like `delay`, `apply_async`, `subtask`, `chain`, etc.  The difference is that those which used to return a `celery.result.AsyncResult` will now return a `twisted.internet.defer.Deferred` instance when they are called (ok, actually a subclass of `Deferred`, but more on that in a second).
 
-###The "one half":  a (Deferred) rose by any other name...
+### The "one half":  a (Deferred) rose by any other name...
 
 So what of this subclass of Twisted's `Deferred`?  It can be thought of as a `Deferred` that also gives transparent access to all the attributes and methods of it's associated `AsyncResult` instance.  It can be thought of in those terms because that's *exactly what it is*, and that's why this part of the API only constitutes half of a thing to learn.
 
@@ -73,7 +73,7 @@ Our subclass is called `DeferredTask`, it lives in `txcelery.defer` and as far a
 
 `DeferredTask` monitors the state of the task and fires with a callback if the task succeeds, or with an errback if the task fails.  If the task is revoked, `DeferredTask` fires with an errback containing a `twisted.defer.CancelledError` as it's `Failure` value.
 
-###In summary
+### In summary
 
 1.  Wrap a task with a `DeferrableTask`
 2.  Call task methods and obtain a `DeferredTask` instance in lieu of an `AsyncResult`
