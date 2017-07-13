@@ -3,7 +3,7 @@ txCelery
 
 Celery for Twisted:  manage Celery tasks from twisted using the Deferred API
 
-[![PyPI version](https://badge.fury.io/py/txCelery.svg)](http://badge.fury.io/py/txCelery)
+[![PyPI version](https://badge.fury.io/py/txcelery-py3.svg)](http://badge.fury.io/py/txcelery-py3)
 
 ##Deprecation Notice
 
