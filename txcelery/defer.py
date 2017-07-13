@@ -7,6 +7,8 @@ Module Contents:
     - DeferredTask
     - CeleryClient
 """
+from builtins import ValueError
+
 from functools import wraps
 from types import MethodType, FunctionType
 
@@ -18,7 +20,7 @@ from twisted.internet import defer, reactor
 from twisted.python.failure import Failure
 
 
-class DeferredTask(defer.Deferred, object):
+class DeferredTask(defer.Deferred):
     """Subclass of `twisted.defer.Deferred` that wraps a
     `celery.local.PromiseProxy` (i.e. a "Celery task"), exposing the combined
     functionality of both classes.
@@ -26,6 +28,9 @@ class DeferredTask(defer.Deferred, object):
     `DeferredTask` instances can be treated both like ordinary Deferreds and
     oridnary PromiseProxies.
     """
+
+    #: Poll Period
+    POLL_PERIOD = 0.05
 
     def __init__(self, async_result):
         """Instantiate a `DeferredTask`.  See `help(DeferredTask)` for details
@@ -50,7 +55,7 @@ class DeferredTask(defer.Deferred, object):
 
         """
         if self.task.state in states.UNREADY_STATES:
-            reactor.callLater(1, self._monitor_task)
+            reactor.callLater(self.POLL_PERIOD, self._monitor_task)
             return
 
         if self.task.state == 'SUCCESS':
@@ -66,7 +71,7 @@ class DeferredTask(defer.Deferred, object):
             ))
 
 
-class DeferrableTask(object):
+class DeferrableTask:
     """Decorator class that wraps a celery task such that any methods
     returning an Celery `AsyncResult` instance are wrapped in a
     `DeferredTask` instance.
